@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具页面布局</title>
+    <meta name="description" content="这是一个页面布局演示。">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <style>
+      body {
+        margin: 0;
+        /* vh 是view height 既视窗高度的意思，100就是100%占满窗口高度 */
+        height: 100vh;
+        background-color: #eee;
+      }
+      /* * {
+        border: 1px solid #333;
+      } */
+      .flex {
+        display: flex;
+      }
+      /* 占满比例 */
+      .flex1 {
+        flex: 1;
+      }
+      /* 竖向 */
+      .column {
+        flex-direction: column;
+      }
+      /* 阴影 */
+      .yinYing {
+        box-shadow: rgb(0 0 0 / 20%) 0px 2px 1px -1px,
+          rgb(0 0 0 / 14%) 0px 1px 1px 0px, rgb(0 0 0 / 12%) 0px 1px 3px 0px;
+      }
+      /* 白色背景 */
+      .baiSe {
+        background-color: #fff;
+      }
+      /* 上下左右外边距 */
+      .mg8 {
+        margin: 8px;
+      }
+      /* 右外边距 */
+      .mgr8 {
+        margin-right: 8px;
+      }
+      /* 上外边距 */
+      .mgt8 {
+        margin-top: 8px;
+      }
+      /* 四个小盒子 */
+      .shuJu {
+        height: 200px;
+      }
+      /* 中间的大盒子 */
+      .lieBiaoXiang {
+        height: 160px;
+      }
+      /* 导航条 */
+      .daoHang {
+        padding: 10px 20px;
+        border-bottom: 1px solid rgb(201, 201, 201);
+        font-size: 14px;
+        color: #666;
+      }
+      .neiRong::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
+      }
+
+      /* 版权部分样式 */
+      .banQuan {
+        background-color: #fff;
+        color: #333;
+        text-align: center;
+        padding: 10px;
+        margin: 1px;
+      }
+
+      /* 当屏幕宽度小于600px时要改变的css */
+      @media (max-width: 600px) {
+        /* 小屏幕上取消侧边栏，后面学js时会教怎么弹出 */
+        .ceBian {
+          display: none;
+        }
+        /* 内容栏和数据栏flex方向改为竖向 */
+        .neiRong {
+          flex-direction: column;
+        }
+        .shangQu {
+          flex-direction: column;
+        }
+        .shuJuQu {
+          flex-direction: column;
+        }
+        /* 右区加左外边距 */
+        .youQu {
+          margin-left: 8px;
+        }
+        /* 数据块外边距，大小改为自动宽高 */
+        .shuJu {
+          margin: 0 0 8px;
+          flex: auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="flex">
+    <!-- 侧边栏 -->
+    <div style="width: 200px; z-index: 3" class="ceBian flex column baiSe yinYing">
+      <!-- 侧边头像栏 -->
+      <!-- 侧边头像栏 -->
+      <div style="
+          padding: 10px;
+          align-items: center;
+          justify-content: center;
+          border-bottom: 1px solid #999;
+        " class="flex">
+        <img alt="logo" src="https://job.xidian.edu.cn/attachment/xidian/avatar/2022/0406/624d77999185f3.81929090.jpg" width="40px" height="40px">
+        <div style="margin-left: 10px">用户名</div>
+      </div>
+      <!-- 导航栏 -->
+      <div class="flex1">
+        <div class="daoHang">导航</div>
+        <div class="daoHang">导航</div>
+        <div class="daoHang">导航</div>
+        <div class="daoHang">导航</div>
+        <div class="daoHang">导航</div>
+      </div>
+    </div>
+    <!-- 主区域 -->
+    <div class="flex flex1 column">
+      <!-- 头部栏 -->
+      <div style="height: 60px; z-index: 2" class="baiSe yinYing">
+        <div style="height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+          <!-- 左侧标题部分 -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: center;">
+            <h2 style="padding: 0; margin: 0; font-size: 24px;">庆安人工智能一站式服务平台</h2>
+            <div style="font-size: 16px; color: #666; padding: 0; margin: 10px; ">AI for QA</div>
+          </div>
+        </div>
+      </div>
+      <!-- 内容区 -->
+        <div class="flex flex1 column neiRong" style="overflow: auto">
+          <!-- 上区（包含左区和右区作为一个整体） -->
+          <div class="flex flex1">
+            <!-- 左区 -->
+            <div style="flex: 3" class="flex column mg8">
+              <!-- 中间大块显示重点数据 -->
+              <div style="display: flex; align-items: center; background: white; padding: 8px 15px; border-radius: 25px; border: 1px solid #e9ecef; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#999" style="margin-right: 8px;">
+                  <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" placeholder="搜索..." style="padding: 8px 10px; border: none; background: transparent; outline: none; flex: 1; min-width: 0; font-size: 14px;">
+                <button style="padding: 8px 20px; background: linear-gradient(45deg, #007bff, #0056b3); color: white; border: none; border-radius: 18px; cursor: pointer; margin-left: 10px; font-size: 14px; transition: all 0.3s ease; white-space: nowrap;">搜索</button>
+              </div>
+              <!-- 数据区 -->
+              <div class="flex shuJuQu mgt8">
+                <!-- 三个小块显示重点数据 -->
+                <div class="shuJu baiSe yinYing flex1 mgr8">
+                  <!-- 管理智能工具-->
+                  <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">管理智能工具<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                  <div style="padding: 10px 15px; flex: 1; display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center;">
+                    <!-- 第一行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M3,3H21V21H3V3M7,7V9H9V7H7M11,7V9H13V7H11M15,7V9H17V7H15M7,11V13H9V11H7M11,11V13H13V11H11M15,11V13H17V11H15M7,15V17H9V15H7M11,15V17H13V15H11M15,15V17H17V15H15Z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">合同审查助手</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M3,3H7V7H3V3M3,11H7V15H3V11M3,19H7V21H3V19M11,3H15V7H11V3M11,11H15V15H11V11M11,19H15V21H11V19M19,3H21V7H19V3M19,11H21V15H19V11M19,19H21V21H19V19M7,11H11V15H7V11Z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">数据分析工具</div>
+                    </div>
+                    <!-- 第二行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M12,15L19.55,7.45L21,9L12,18L3,9L4.45,7.45L12,15Z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">智能推荐系统</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M16,18H8V16h8V18z M16,14H8V12h8V14z M13,9V3.5L18.5,9H13z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">自动化报告生成</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 工业智能工具 -->
+                <div class="shuJu baiSe yinYing flex1 mgr8">
+                    <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">工业智能工具<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                  <div style="padding: 10px 15px; flex: 1; display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center;">
+                    <!-- 第一行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4bc0c0 0%, #2aa1c0 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M12,2L2,7l10,5l10-5l-10-5z M12,17l-10-5l10-5l10,5l-10,5z M12,22l-10-5l10-5l10,5l-10,5z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">设备故障预测</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ff9ff3 0%, #feca57 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M9,3v1l6-3v1l-6,3V11h5c0,0.55,0.45,1,1,1c0.55,0,1-0.45,1-1V3c0-1.66-1.34-3-3-3S9,1.34,9,3z M12,13c-1.66,0-3,1.34-3,3s1.34,3,3,3s3-1.34,3-3S13.66,13,12,13z M4.93,11H7l1.12-3.36C8.04,7.14,7.57,6.93,7.22,6.97c-0.34,0.04-0.7,0.3-0.74,0.64L6.2,9L4.93,11z M19.07,11l-1.27-2c-0.04-0.34-0.4-0.6-0.74-0.64c-0.35-0.04-0.82,0.17-0.9,0.66L17,11h2.07z M15,13v3h3v2h-3v3h-2v-3H10v-2h3v-3H15z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">质量检测系统</div>
+                    </div>
+                    <!-- 第二行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M2,2v6h6l-2-2L2,8V2z M20,22v-6h-6l2,2l2-2l4,4V22z M7,7v2h10V7H7z M2,16v-2h2l2,2L4,20h4v-2H2z M22,8h-2l-2,2l2,2h2V8z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">生产调度优化</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M4,11H18V8H4V11z M4,15H18v-3H4V15z M4,19H12v-3H4V19z M20,3H4C2.9,3,2,3.9,2,5v14c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V5C22,3.9,21.1,3,20,3z M20,19H4V5h16V19z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">能源消耗分析</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 智能工具 -->
+                <div class="shuJu baiSe yinYing flex1">
+                  <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">智能工具<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                  <div style="padding: 10px 15px; flex: 1; display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center;">
+                    <!-- 第一行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4bc0c0 0%, #2aa1c0 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M3 3h18v18H3V3zm16 16H5V5h14v14zM13 7h-2v5.41l3.35 3.35 1.41-1.41L13 10.17z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">数据清洗</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; margin-bottom: 5px; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ff9ff3 0%, #feca57 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM7 10v4h3v-4H7zm4 6v2h2v-2h-2zm2-4v4h3v-4h-3z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">数据可视化</div>
+                    </div>
+                    <!-- 第二行两个工具 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">异常检测</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 45%; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                        </svg>
+                      </div>
+                      <div style="color: #666; font-size: 14px; text-align: center;">数据导出</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 列表区，列表数据可以无限增加 -->
+              <div class="flex column">
+                <!-- 列表项 -->
+                <!-- 智能体-->
+                <div class="lieBiaoXiang mgt8 baiSe yinYing" >
+                  <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">智能体<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                  <div style="flex: 1; padding: 15px; display: flex; justify-content: space-around; align-items: center;">
+                    <!-- 运营体系智能助手 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M21.6,18.2L20.4,12L21.6,5.8L17.2,7L15.6,1L9.6,3L8,8.8L2.4,7.2L0.4,13L2.4,18.8L7.8,17.2L9.6,23L15.6,21L17.2,15.2L21.6,18.2Z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 14px; color: #333; font-weight: 500; text-align: center;">运营体系智能助手</div>
+                    </div>
+                    
+                    <!-- 技术标准智能助手 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 14px; color: #333; font-weight: 500; text-align: center;">技术标准智能助手</div>
+                    </div>
+                    
+                    <!-- 作业指导书智能助手 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M16,18H8V16h8V18z M16,14H8V12h8V14z M13,9V3.5L18.5,9H13z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 14px; color: #333; font-weight: 500; text-align: center;">作业指导书智能助手</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 大模型 -->
+                <div class="lieBiaoXiang mgt8 baiSe yinYing"> 
+                  <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">大模型<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                  <div style="padding: 15px; display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: nowrap; width: 100%;">
+                    <!-- 航空工业大模型智能助手 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease; flex: 1; min-width: 160px; max-width: 200px; margin: 0 5px;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M13,8H11V16H13V8M13,18H11V20H13V18Z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 13px; color: #333; font-weight: 500; text-align: center; width: 100%; padding: 0 5px; line-height: 1.3;">航空工业大模型智能助手</div>
+                    </div>
+                    <!-- 推理大模型验证GPU-->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease; flex: 1; min-width: 160px; max-width: 200px; margin: 0 5px;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M18,18H6V16h12V18z M18,14H6V12h12V14z M13,9V3.5L18.5,9H13z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 13px; color: #333; font-weight: 500; text-align: center; width: 100%; padding: 0 5px; line-height: 1.3;">推理大模型验证（GPU）</div>
+                    </div>
+                    <!-- 推理大模型验证（CPU） -->
+                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s ease; flex: 1; min-width: 160px; max-width: 200px; margin: 0 5px;">
+                      <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                          <path d="M14,17H7V15H14V17M17,13H7V11H17V13M17,9H7V7H17V9M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.9 20.1,3 19,3Z" />
+                        </svg>
+                      </div>
+                      <div style="font-size: 13px; color: #333; font-weight: 500; text-align: center; width: 100%; padding: 0 5px; line-height: 1.3;">推理大模型验证（CPU）</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 待开发... -->
+                <div class="lieBiaoXiang mgt8 baiSe yinYing">
+                    <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">待开发...<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                </div>
+              </div>
+            </div>
+            <!-- 右区 -->
+            <div style="flex: 1" class="youQu flex column mgr8 mgt8">
+              <!-- 热门智能小工具 -->
+              <div style="height: 300px" class="baiSe yinYing">
+                <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">智能小工具HOT<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                <div style="flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto;">
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #ff6b6b; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)'">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">1. 合同审查助手</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #4ecdc4; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)'">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">2. 图片风格转换器</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #45b7d1; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)'">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">3. 语音转文字助手</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #96ceb4; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)'">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">4. 代码智能补全器</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #ffeaa7; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)'">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">5. 情感分析检测器</div>
+                  </div>
+                  <!-- 添加一个弹性间隔，确保内容不会溢出 -->
+                  <div class="flex1">
+                  </div>
+                </div>
+              </div>
+              <!-- 新手指南 -->
+              <div style="height: 300px" class="mgt8 baiSe yinYing">
+                <div style="padding: 10px 15px; border-bottom: 1px solid #e9ecef; font-weight: bold; color: #333; font-size: 16px; display: flex; align-items: center; justify-content: space-between;">智能助手指南<span style="display: flex; align-items: center; cursor: pointer; color: #d1d1d1; font-size: 11px;"><span style="font-weight: normal;">&gt;&gt;&gt;</span><span style="margin-left: 4px;">更多</span></span></div>
+                <div style="flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto;">
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #45b7d1; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)';" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)';">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">AI数据清洗入门指南</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #96ceb4; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)';" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)';">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">智能可视化工具教程</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #ffeaa7; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)';" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)';">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">异常检测算法使用</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #ff7675; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)';" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)';">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">数据导出最佳实践</div>
+                  </div>
+                  <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; border-left: 3px solid #74b9ff; transition: all 0.2s ease; cursor: pointer; flex-shrink: 0;" onmouseover="this.style.backgroundColor='#e9ecef'; this.style.transform='translateX(4px)';" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='translateX(0)';">
+                    <div style="font-weight: 500; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">AI模型训练基础</div>
+                  </div>
+                  <!-- 添加一个弹性间隔，确保内容不会溢出 -->
+                  <div style="flex: 1;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 下区（网页版权部分） -->
+          <div class="banQuan flex" style="gap: 20px; align-items: center; justify-content: center; margin-left: 8px;">
+            <div style="font-size: 14px;">© 2025 布局示例平台 版权所有</div>
+            <div style="font-size: 14px;">演示网页 - 响应式设计展示</div>
+            <div style="font-size: 14px; color: #666;">技术支持：网页开发团队</div>
+          </div>
+        </div>
+    </div>
+  
+
+<div class="el-overlay" style="z-index: 2001; display: none;"><div role="dialog" aria-modal="true" aria-labelledby="el-id-3680-0" aria-describedby="el-id-3680-1" class="el-overlay-dialog"></div></div><div class="el-overlay" style="z-index: 2002; display: none;"><div role="dialog" aria-modal="true" aria-labelledby="el-id-3680-2" aria-describedby="el-id-3680-3" class="el-overlay-dialog"></div></div><div id="el-popper-container-3680"></div><div class="el-overlay" style="z-index: 2004; display: none;"><div role="dialog" aria-modal="true" aria-labelledby="el-id-3680-5" aria-describedby="el-id-3680-6" class="el-overlay-dialog"></div></div><div class="el-overlay" style="z-index: 2005; display: none;"><div role="dialog" aria-modal="true" aria-labelledby="el-id-3680-7" aria-describedby="el-id-3680-8" class="el-overlay-dialog"></div></div><div class="el-overlay" style="z-index: 2006; display: none;"><div role="dialog" aria-modal="true" aria-labelledby="el-id-3680-9" aria-describedby="el-id-3680-10" class="el-overlay-dialog"></div></div></body><div style="all: initial;"><div id="__fyzs__" class="notranslate" style="all: initial;"></div></div></html>

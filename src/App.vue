@@ -12,18 +12,20 @@ import AIAssistant from './views/AiAssistant.vue'
 import AIProducts from './views/AIProducts.vue'
 import Workflow from './views/Workflow.vue'
 import ModelLibrary from './views/ModelLibrary.vue'
+import HotTools from './views/HotTools.vue'
 
 // 当前选中的功能区
 const activeSection = ref(1)
 
 // 组件映射
-const componentMap = {
-  1: HomeView,
-  2: AIAssistant,
-  3: AIProducts,
-  4: Workflow,
-  5: ModelLibrary
-}
+  const componentMap = {
+    1: HomeView,
+    2: AIAssistant,
+    3: AIProducts,
+    4: Workflow,
+    5: ModelLibrary,
+    6: HotTools
+  }
 
 // 计算属性：根据当前选中的功能区返回对应的组件
 const currentComponent = computed(() => {
@@ -34,6 +36,11 @@ const currentComponent = computed(() => {
 const handleSectionChange = (sectionId) => {
   activeSection.value = sectionId
 }
+
+// 监听热工具详情页面跳转事件
+window.addEventListener('navigate-to-hot-tool', () => {
+  activeSection.value = 6
+})
 </script>
 
 <style scoped>

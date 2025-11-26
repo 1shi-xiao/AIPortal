@@ -19,46 +19,88 @@
       </nav>
     </aside>
 
-    <!-- 右侧内容区 -->
-    <main class="main-content">
-      <slot></slot>
-    </main>
-    
-    <!-- 右侧边栏 -->
-    <aside class="sidebar-right">
-      <!-- 热门智能小工具 -->
-      <div class="card">
-        <div class="card-header">
-          <h3>智能小工具HOT <span class="hot-icon">🔥</span></h3>
-        </div>
-        <div class="card-content">
-          <div class="tool-item" style="border-left-color: #ff6b6b;">合同审查助手</div>
-          <div class="tool-item" style="border-left-color: #4ecdc4;">图片风格转换器</div>
-          <div class="tool-item" style="border-left-color: #45b7d1;">语音转文字助手</div>
-          <div class="tool-item" style="border-left-color: #96ceb4;">代码智能补全器</div>
-          <div class="tool-item" style="border-left-color: #ffeaa7;">情感分析检测器</div>
-        </div>
+    <!-- 右侧区域（包含标题栏、主要内容和右侧边栏） -->
+    <div class="right-area">
+      <!-- 固定标题栏 -->
+      <div class="header-content">
+        <h1 class="page-title">庆安AI智能门户</h1>
+        <p class="page-subtitle">Artificial Intelligence for Qing'an</p>
       </div>
+      
+      <div class="right-content-wrapper">
+        <!-- 右侧内容区 -->
+        <main class="main-content">
+          <slot></slot>
+        </main>
+        
+        <!-- 右侧边栏 -->
+        <aside class="sidebar-right">
+          <!-- 热门智能小工具 -->
+          <div class="card">
+            <div class="card-header">
+              <h3>智能小工具HOT <span class="hot-icon">🔥</span></h3>
+            </div>
+            <div class="card-content">
+              <div 
+                class="tool-item" 
+                style="border-left-color: #ff6b6b;"
+                @click="openLink(APP_LINKS.HOT_TOOLS.CONTRACT_REVIEW)"
+              >
+                合同审查助手
+              </div>
+              <div 
+                class="tool-item" 
+                style="border-left-color: #4ecdc4;"
+                @click="openLink(APP_LINKS.HOT_TOOLS.IMAGE_STYLE_TRANSFER)"
+              >
+                图片风格转换器
+              </div>
+              <div 
+                class="tool-item" 
+                style="border-left-color: #45b7d1;"
+                @click="openLink(APP_LINKS.HOT_TOOLS.SPEECH_TO_TEXT)"
+              >
+                语音转文字助手
+              </div>
+              <div 
+                class="tool-item" 
+                style="border-left-color: #96ceb4;"
+                @click="openLink(APP_LINKS.HOT_TOOLS.CODE_COMPLETION)"
+              >
+                代码智能补全器
+              </div>
+              <div 
+                class="tool-item" 
+                style="border-left-color: #ffeaa7;"
+                @click="openLink(APP_LINKS.HOT_TOOLS.SENTIMENT_ANALYSIS)"
+              >
+                情感分析检测器
+              </div>
+            </div>
+          </div>
 
-      <!-- 智能助手指南 -->
-      <div class="card">
-        <div class="card-header">
-          <h3>智能助手指南</h3>
-        </div>
-        <div class="card-content">
-          <div class="guide-item" style="border-left-color: #45b7d1;">AI数据清洗入门指南</div>
-          <div class="guide-item" style="border-left-color: #96ceb4;">智能可视化工具教程</div>
-          <div class="guide-item" style="border-left-color: #ffeaa7;">异常检测算法使用</div>
-          <div class="guide-item" style="border-left-color: #ff6b6b;">数据导出最佳实践</div>
-          <div class="guide-item" style="border-left-color: #74b9ff;">AI模型训练基础</div>
-        </div>
+          <!-- 智能助手指南 -->
+          <div class="card">
+            <div class="card-header">
+              <h3>智能助手指南</h3>
+            </div>
+            <div class="card-content">
+              <div class="guide-item" style="border-left-color: #45b7d1; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.DATA_CLEANING)">AI数据清洗入门指南</div>
+              <div class="guide-item" style="border-left-color: #96ceb4; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.VISUALIZATION_TOOLS)">智能可视化工具教程</div>
+              <div class="guide-item" style="border-left-color: #ffeaa7; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.ANOMALY_DETECTION)">异常检测算法使用</div>
+              <div class="guide-item" style="border-left-color: #ff6b6b; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.EXPORT_BEST_PRACTICES)">数据导出最佳实践</div>
+              <div class="guide-item" style="border-left-color: #74b9ff; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.MODEL_TRAINING)">AI模型训练基础</div>
+            </div>
+          </div>
+        </aside>
       </div>
-    </aside>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { APP_LINKS, openLink } from '../config/links.js'
 
 // 当前选中的功能区
 const activeSection = ref(1)
@@ -90,6 +132,47 @@ const emit = defineEmits(['section-change'])
   width: 100vw;
   overflow: hidden;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 右侧区域 */
+.right-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 固定标题栏 */
+.header-content {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.8rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* 右侧内容包装器 */
+.right-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
 /* 左侧导航栏 */
@@ -163,7 +246,7 @@ const emit = defineEmits(['section-change'])
 /* 右侧内容区 */
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0.5rem 2rem 2rem;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
@@ -231,18 +314,20 @@ const emit = defineEmits(['section-change'])
   padding: 10px 15px;
   margin-bottom: 8px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.6);
-  border-left: 3px solid;
+  background: rgba(255, 255, 255, 0.7);
+  border-left: 4px solid;
   cursor: pointer;
   transition: all 0.3s ease;
   color: #4a5568;
   font-weight: 600;
   font-size: 14px;
+  user-select: none;
 }
 
 .tool-item:hover {
-  transform: translateX(2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .guide-item {
@@ -299,6 +384,22 @@ const emit = defineEmits(['section-change'])
   .nav-icon {
     margin-right: 0;
     margin-bottom: 0.25rem;
+  }
+
+  .right-content-wrapper {
+    flex-direction: column;
+  }
+  
+  .header-content {
+    padding: 0.8rem 1.5rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .page-subtitle {
+    font-size: 0.9rem;
   }
 
   .main-content {

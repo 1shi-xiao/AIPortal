@@ -13,9 +13,9 @@ export const APP_LINKS = {
     QUALITY_INSPECTION: '',
     ENERGY_OPTIMIZATION: '',
     //大模型工具
-    GENERAL_LLM: '',
-    CODE_LLM: '',
-    MULTIMODAL_LLM: ''
+    GENERAL_LLM: 'https://cn.bing.com/search?q=通用大模型&form=ANNTH1',
+    CODE_LLM: 'https://cn.bing.com/search?q=代码大模型&form=ANNTH1',
+    MULTIMODAL_LLM: 'https://cn.bing.com/search?q=多模态大模型&form=ANNTH1'
   },
   // 页面链接
   PAGES: {
@@ -60,12 +60,26 @@ export const APP_LINKS = {
 };
 
 // 打开链接的工具函数
-export const openLink = (url, target = '_blank') => {
+export const openLink = (url, target = '_blank', toolData = null) => {
   // 检查url是否为空
   if (!url || url.trim() === '') {
     // 如果url为空，显示"暂未开发"提示框
     alert('暂未开发');
     return;
+  }
+  
+  // 如果提供了工具数据，记录工具访问
+  if (toolData) {
+    // 导入工具服务（使用动态导入避免循环依赖）
+    import('../services/toolService.js').then(({ default: toolService }) => {
+      // 记录工具访问
+      toolService.recordToolAccess(toolData);
+      
+      // 触发全局工具访问事件
+      window.dispatchEvent(new CustomEvent('tool-accessed', { 
+        detail: toolData 
+      }));
+    });
   }
   
   // 判断是否为内部页面链接

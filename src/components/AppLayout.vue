@@ -44,35 +44,60 @@
               <div 
                 class="tool-item" 
                 style="border-left-color: #ff6b6b;"
-                @click="openLink(APP_LINKS.HOT_TOOLS.CONTRACT_REVIEW)"
+                @click="openLink(APP_LINKS.HOT_TOOLS.CONTRACT_REVIEW, '_blank', { 
+                  name: '合同审查助手', 
+                  icon: '📋', 
+                  category: '管理智能', 
+                  url: APP_LINKS.HOT_TOOLS.CONTRACT_REVIEW 
+                })"
               >
                 合同审查助手
               </div>
               <div 
                 class="tool-item" 
                 style="border-left-color: #4ecdc4;"
-                @click="openLink(APP_LINKS.HOT_TOOLS.IMAGE_STYLE_TRANSFER)"
+                @click="openLink(APP_LINKS.HOT_TOOLS.IMAGE_STYLE_TRANSFER, '_blank', { 
+                  name: '图片风格转换器', 
+                  icon: '🎨', 
+                  category: '多媒体', 
+                  url: APP_LINKS.HOT_TOOLS.IMAGE_STYLE_TRANSFER 
+                })"
               >
                 图片风格转换器
               </div>
               <div 
                 class="tool-item" 
                 style="border-left-color: #45b7d1;"
-                @click="openLink(APP_LINKS.HOT_TOOLS.SPEECH_TO_TEXT)"
+                @click="openLink(APP_LINKS.HOT_TOOLS.SPEECH_TO_TEXT, '_blank', { 
+                  name: '语音转文字助手', 
+                  icon: '🎤', 
+                  category: '语音识别', 
+                  url: APP_LINKS.HOT_TOOLS.SPEECH_TO_TEXT 
+                })"
               >
                 语音转文字助手
               </div>
               <div 
                 class="tool-item" 
                 style="border-left-color: #96ceb4;"
-                @click="openLink(APP_LINKS.HOT_TOOLS.CODE_COMPLETION)"
+                @click="openLink(APP_LINKS.HOT_TOOLS.CODE_COMPLETION, '_blank', { 
+                  name: '代码智能补全器', 
+                  icon: '💻', 
+                  category: '开发工具', 
+                  url: APP_LINKS.HOT_TOOLS.CODE_COMPLETION 
+                })"
               >
                 代码智能补全器
               </div>
               <div 
                 class="tool-item" 
                 style="border-left-color: #ffeaa7;"
-                @click="openLink(APP_LINKS.HOT_TOOLS.SENTIMENT_ANALYSIS)"
+                @click="openLink(APP_LINKS.HOT_TOOLS.SENTIMENT_ANALYSIS, '_blank', { 
+                  name: '情感分析检测器', 
+                  icon: '😊', 
+                  category: '文本分析', 
+                  url: APP_LINKS.HOT_TOOLS.SENTIMENT_ANALYSIS 
+                })"
               >
                 情感分析检测器
               </div>
@@ -85,11 +110,36 @@
               <h3>智能助手指南</h3>
             </div>
             <div class="card-content">
-              <div class="guide-item" style="border-left-color: #45b7d1; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.DATA_CLEANING)">AI数据清洗入门指南</div>
-              <div class="guide-item" style="border-left-color: #96ceb4; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.VISUALIZATION_TOOLS)">智能可视化工具教程</div>
-              <div class="guide-item" style="border-left-color: #ffeaa7; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.ANOMALY_DETECTION)">异常检测算法使用</div>
-              <div class="guide-item" style="border-left-color: #ff6b6b; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.EXPORT_BEST_PRACTICES)">数据导出最佳实践</div>
-              <div class="guide-item" style="border-left-color: #74b9ff; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.MODEL_TRAINING)">AI模型训练基础</div>
+              <div class="guide-item" style="border-left-color: #45b7d1; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.DATA_CLEANING, '_blank', { 
+                name: 'AI数据清洗入门指南', 
+                icon: '🧹', 
+                category: 'AI指南', 
+                url: APP_LINKS.AI_GUIDES.DATA_CLEANING 
+              })">AI数据清洗入门指南</div>
+              <div class="guide-item" style="border-left-color: #96ceb4; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.VISUALIZATION_TOOLS, '_blank', { 
+                name: '智能可视化工具教程', 
+                icon: '📊', 
+                category: 'AI指南', 
+                url: APP_LINKS.AI_GUIDES.VISUALIZATION_TOOLS 
+              })">智能可视化工具教程</div>
+              <div class="guide-item" style="border-left-color: #ffeaa7; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.ANOMALY_DETECTION, '_blank', { 
+                name: '异常检测算法使用', 
+                icon: '🔍', 
+                category: 'AI指南', 
+                url: APP_LINKS.AI_GUIDES.ANOMALY_DETECTION 
+              })">异常检测算法使用</div>
+              <div class="guide-item" style="border-left-color: #ff6b6b; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.EXPORT_BEST_PRACTICES, '_blank', { 
+                name: '数据导出最佳实践', 
+                icon: '📤', 
+                category: 'AI指南', 
+                url: APP_LINKS.AI_GUIDES.EXPORT_BEST_PRACTICES 
+              })">数据导出最佳实践</div>
+              <div class="guide-item" style="border-left-color: #74b9ff; cursor: pointer;" @click="openLink(APP_LINKS.AI_GUIDES.MODEL_TRAINING, '_blank', { 
+                name: 'AI模型训练基础', 
+                icon: '🏋️', 
+                category: 'AI指南', 
+                url: APP_LINKS.AI_GUIDES.MODEL_TRAINING 
+              })">AI模型训练基础</div>
             </div>
           </div>
         </aside>

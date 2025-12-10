@@ -5,11 +5,11 @@ import os
 import uuid
 from datetime import datetime
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models.file import File as FileModel
-from ...schemas import FileCreate, FileResponse, BaseResponse
-from ...core.config import settings
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models.file import File as FileModel
+from ..schemas import FileCreate, FileResponse, BaseResponse
+from ..core.config import settings
 
 router = APIRouter(prefix="/files", tags=["文件管理"])
 
@@ -32,7 +32,8 @@ async def upload_file(
         )
     
     # 检查文件类型
-    file_extension = file.filename.split('.')[-1].lower() if '.' in file.filename else ''
+    filename = file.filename or ''
+    file_extension = filename.split('.')[-1].lower() if '.' in filename else ''
     if file_extension not in settings.ALLOWED_FILE_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -40,7 +41,8 @@ async def upload_file(
         )
     
     # 生成唯一文件名
-    unique_filename = f"{uuid.uuid4().hex}_{file.filename}"
+    safe_filename = file.filename or f"file_{uuid.uuid4().hex[:8]}"
+    unique_filename = f"{uuid.uuid4().hex}_{safe_filename}"
     file_path = os.path.join(settings.UPLOAD_DIR, unique_filename)
     
     # 保存文件
@@ -64,7 +66,7 @@ async def upload_file(
     
     return BaseResponse(
         message="文件上传成功",
-        data=FileResponse.from_orm(db_file)
+        data=FileResponse.model_validate(db_file)
     )
 
 @router.get("/", response_model=BaseResponse)
@@ -81,7 +83,7 @@ async def get_user_files(
     
     return BaseResponse(
         message="获取文件列表成功",
-        data=[FileResponse.from_orm(file) for file in files]
+        data=[FileResponse.model_validate(file) for file in files]
     )
 
 @router.get("/{file_id}", response_model=BaseResponse)
@@ -104,7 +106,7 @@ async def get_file_info(
     
     return BaseResponse(
         message="获取文件信息成功",
-        data=FileResponse.from_orm(file)
+        data=FileResponse.model_validate(file)
     )
 
 @router.delete("/{file_id}", response_model=BaseResponse)
@@ -126,8 +128,8 @@ async def delete_file(
         )
     
     # 删除物理文件
-    if os.path.exists(file.file_path):
-        os.remove(file.file_path)
+    if os.path.exists(file.file_path):  # type: ignore
+        os.remove(file.file_path)  # type: ignore
     
     # 删除数据库记录
     db.delete(file)
@@ -156,20 +158,22 @@ async def download_file(
         )
     
     # 检查文件是否存在
-    if not os.path.exists(file.file_path):
+    if not os.path.exists(file.file_path):  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="文件不存在或已被删除"
         )
     
     # 更新下载次数
-    file.download_count += 1
+    from sqlalchemy import update
+    stmt = update(file.__class__).where(file.__class__.id == file.id).values(download_count=file.__class__.download_count + 1)
+    db.execute(stmt)
     db.commit()
     
     return FileResponse(
-        path=file.file_path,
-        filename=file.original_name,
-        media_type=file.mime_type or "application/octet-stream"
+        path=file.file_path,  # type: ignore
+        filename=file.original_name,  # type: ignore
+        media_type=file.mime_type or "application/octet-stream"  # type: ignore
     )
 
 @router.post("/{file_id}/share", response_model=BaseResponse)
@@ -191,7 +195,9 @@ async def share_file(
         )
     
     # 设置为公开分享
-    file.is_public = True
+    from sqlalchemy import update
+    stmt = update(file.__class__).where(file.__class__.id == file.id).values(is_public=True)
+    db.execute(stmt)
     db.commit()
     
     share_url = f"{settings.HOST}/api/v1/files/{file_id}/public"
@@ -218,14 +224,14 @@ async def get_public_file(file_id: int, db: Session = Depends(get_db)):
         )
     
     # 检查文件是否存在
-    if not os.path.exists(file.file_path):
+    if not os.path.exists(file.file_path):  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="文件不存在或已被删除"
         )
     
     return FileResponse(
-        path=file.file_path,
-        filename=file.original_name,
-        media_type=file.mime_type or "application/octet-stream"
+        path=file.file_path,  # type: ignore
+        filename=file.original_name,  # type: ignore
+        media_type=file.mime_type or "application/octet-stream"  # type: ignore
     )

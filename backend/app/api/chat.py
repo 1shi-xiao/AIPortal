@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 import uuid
+from datetime import datetime, timezone
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models.chat import ChatSession, ChatMessage
-from ...schemas import (
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models.chat import ChatSession, ChatMessage
+from ..schemas import (
     ChatSessionCreate, 
     ChatSessionResponse, 
     ChatMessageResponse, 
@@ -39,7 +40,7 @@ async def create_chat_session(
     
     return BaseResponse(
         message="创建会话成功",
-        data=ChatSessionResponse.from_orm(db_session)
+        data=ChatSessionResponse.model_validate(db_session)
     )
 
 @router.get("/sessions", response_model=BaseResponse)
@@ -57,7 +58,7 @@ async def get_chat_sessions(
     
     return BaseResponse(
         message="获取会话列表成功",
-        data=[ChatSessionResponse.from_orm(session) for session in sessions]
+        data=[ChatSessionResponse.model_validate(session) for session in sessions]
     )
 
 @router.get("/sessions/{session_id}", response_model=BaseResponse)
@@ -80,7 +81,7 @@ async def get_chat_session(
     
     return BaseResponse(
         message="获取会话详情成功",
-        data=ChatSessionResponse.from_orm(session)
+        data=ChatSessionResponse.model_validate(session)
     )
 
 @router.delete("/sessions/{session_id}", response_model=BaseResponse)
@@ -102,7 +103,9 @@ async def delete_chat_session(
         )
     
     # 软删除，标记为不活跃
-    session.is_active = False
+    from sqlalchemy import update
+    stmt = update(ChatSession).where(ChatSession.id == session.id).values(is_active=False)
+    db.execute(stmt)
     db.commit()
     
     return BaseResponse(message="删除会话成功")
@@ -134,7 +137,7 @@ async def get_chat_messages(
     
     return BaseResponse(
         message="获取消息成功",
-        data=[ChatMessageResponse.from_orm(msg) for msg in messages]
+        data=[ChatMessageResponse.model_validate(msg) for msg in messages]
     )
 
 @router.post("/sessions/{session_id}/messages", response_model=BaseResponse)
@@ -178,15 +181,17 @@ async def send_message(
     db.add(ai_message)
     
     # 更新会话时间
-    session.updated_at = datetime.utcnow()
+    from sqlalchemy import update
+    stmt = update(ChatSession).where(ChatSession.id == session.id).values(updated_at=datetime.now(timezone.utc))
+    db.execute(stmt)
     
     db.commit()
     
     return BaseResponse(
         message="消息发送成功",
         data={
-            "user_message": ChatMessageResponse.from_orm(user_message),
-            "ai_message": ChatMessageResponse.from_orm(ai_message)
+            "user_message": ChatMessageResponse.model_validate(user_message),
+            "ai_message": ChatMessageResponse.model_validate(ai_message)
         }
     )
 

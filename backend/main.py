@@ -4,10 +4,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 import logging
 import os
+from datetime import datetime, timezone
 
-from .core.config import settings
-from .core.database import init_db
-from .api import (
+from app.core.config import settings
+from app.db.database import init_db
+from app.api import (
     auth_router,
     files_router,
     ai_tools_router,
@@ -113,8 +114,8 @@ async def shutdown_event():
 async def init_default_data():
     """初始化默认数据"""
     from sqlalchemy.orm import Session
-    from .core.database import SessionLocal
-    from .models.tool import Tool
+    from .app.db.database import SessionLocal
+    from .app.models import Tool
     
     db: Session = SessionLocal()
     
@@ -202,7 +203,7 @@ async def health_check():
     return {
         "status": "healthy",
         "version": settings.APP_VERSION,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
 if __name__ == "__main__":

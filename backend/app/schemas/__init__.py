@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
@@ -11,7 +11,7 @@ class BaseResponse(BaseModel):
 # 用户相关模型
 class UserBase(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
-    email: EmailStr
+    email: str
     full_name: Optional[str] = Field(None, max_length=100)
 
 class UserCreate(UserBase):
@@ -19,7 +19,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     username: Optional[str] = Field(None, min_length=3, max_length=50)
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     full_name: Optional[str] = Field(None, max_length=100)
     avatar: Optional[str] = None
 
@@ -71,7 +71,7 @@ class FileResponse(FileBase):
 
 # 聊天相关模型
 class ChatMessageBase(BaseModel):
-    role: str = Field(..., regex="^(user|assistant|system)$")
+    role: str = Field(..., pattern="^(user|assistant|system)$")
     content: str
 
 class ChatMessageCreate(ChatMessageBase):

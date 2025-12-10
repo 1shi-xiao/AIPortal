@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models.settings import UserSettings, SystemSettings
-from ...schemas import UserSettingsResponse, SystemSettingsResponse, BaseResponse
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models.settings import UserSettings, SystemSettings
+from ..schemas import UserSettingsResponse, SystemSettingsResponse, BaseResponse
 
 router = APIRouter(prefix="/settings", tags=["系统设置"])
 
@@ -28,7 +28,7 @@ async def get_user_settings(
     
     return BaseResponse(
         message="获取用户设置成功",
-        data=UserSettingsResponse.from_orm(settings)
+        data=UserSettingsResponse.model_validate(settings)
     )
 
 @router.put("/user", response_model=BaseResponse)
@@ -60,7 +60,7 @@ async def update_user_settings(
     
     return BaseResponse(
         message="更新用户设置成功",
-        data=UserSettingsResponse.from_orm(settings)
+        data=UserSettingsResponse.model_validate(settings)
     )
 
 @router.get("/system/public", response_model=BaseResponse)
@@ -102,7 +102,7 @@ async def get_system_settings(
     
     return BaseResponse(
         message="获取系统设置成功",
-        data=[SystemSettingsResponse.from_orm(setting) for setting in settings]
+        data=[SystemSettingsResponse.model_validate(setting) for setting in settings]
     )
 
 @router.put("/system/{setting_key}", response_model=BaseResponse)
@@ -110,7 +110,7 @@ async def update_system_setting(
     setting_key: str,
     setting_value: str,
     setting_type: str = "string",
-    description: str = None,
+    description: Optional[str] = None,
     is_public: bool = False,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -134,20 +134,23 @@ async def update_system_setting(
         db.add(setting)
     else:
         # 更新现有设置
-        setting.setting_value = setting_value
-        if setting_type:
-            setting.setting_type = setting_type
-        if description is not None:
-            setting.description = description
-        if is_public is not None:
-            setting.is_public = is_public
+        from sqlalchemy import update
+        update_data = {
+            SystemSettings.setting_value: setting_value,  # type: ignore
+            SystemSettings.setting_type: setting_type,  # type: ignore
+            SystemSettings.description: description,  # type: ignore
+            SystemSettings.is_public: is_public  # type: ignore
+        }
+        stmt = update(SystemSettings).where(SystemSettings.id == setting.id).values(**update_data)
+        db.execute(stmt)
     
     db.commit()
-    db.refresh(setting)
+    if not setting:
+        db.refresh(setting)
     
     return BaseResponse(
         message="更新系统设置成功",
-        data=SystemSettingsResponse.from_orm(setting)
+        data=SystemSettingsResponse.model_validate(setting)
     )
 
 @router.delete("/system/{setting_key}", response_model=BaseResponse)

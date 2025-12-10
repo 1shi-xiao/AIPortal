@@ -2,7 +2,7 @@
 from .config import settings
 
 # 数据库
-from .database import get_db, init_db
+from ..db.database import get_db, init_db
 
 # 安全相关
 from .security import (

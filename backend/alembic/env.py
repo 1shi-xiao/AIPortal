@@ -42,6 +42,8 @@ def run_migrations_offline() -> None:
 def run_migrations_online() -> None:
     """在'online'模式下运行迁移。"""
     configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        configuration = {}
     configuration["sqlalchemy.url"] = settings.DATABASE_URL
     
     connectable = engine_from_config(

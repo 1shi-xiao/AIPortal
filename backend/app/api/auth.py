@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime, timezone
 
-from ...core.security import get_password_hash, verify_password, create_tokens
-from ...core.database import get_db
-from ...models.user import User
-from ...schemas import UserCreate, UserResponse, UserUpdate, BaseResponse, LoginRequest, Token
+from ..core.security import get_password_hash, verify_password, create_tokens, get_current_user
+from ..db.database import get_db
+from ..models.user import User
+from ..schemas import UserCreate, UserResponse, UserUpdate, BaseResponse, LoginRequest, Token, RefreshTokenRequest
 
 router = APIRouter(prefix="/auth", tags=["认证"])
 
@@ -49,13 +50,13 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     """用户登录"""
     # 查找用户
     user = db.query(User).filter(User.username == login_data.username).first()
-    if not user or not verify_password(login_data.password, user.password_hash):
+    if not user or not verify_password(login_data.password, user.password_hash):  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="用户名或密码错误"
         )
     
-    if not user.is_active:
+    if not user.is_active:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="账户已被禁用"
@@ -65,7 +66,7 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     tokens = create_tokens(str(user.id))
     
     # 更新最后登录时间
-    user.last_login = datetime.utcnow()
+    user.last_login = datetime.now(timezone.utc)  # type: ignore
     db.commit()
     
     return BaseResponse(
@@ -76,7 +77,7 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
 @router.post("/refresh", response_model=BaseResponse)
 async def refresh_token(refresh_data: RefreshTokenRequest):
     """刷新访问令牌"""
-    from ...core.security import verify_token
+    from ..core.security import verify_token
     
     user_id = verify_token(refresh_data.refresh_token)
     if not user_id:
@@ -125,7 +126,7 @@ async def update_current_user_info(
     
     return BaseResponse(
         message="更新用户信息成功",
-        data=UserResponse.from_orm(user)
+        data=UserResponse.model_validate(user)
     )
 
 @router.post("/logout", response_model=BaseResponse)
@@ -150,14 +151,14 @@ async def change_password(
         )
     
     # 验证旧密码
-    if not verify_password(old_password, user.password_hash):
+    if not verify_password(old_password, user.password_hash):  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="旧密码错误"
         )
     
     # 更新密码
-    user.password_hash = get_password_hash(new_password)
+    user.password_hash = get_password_hash(new_password)  # type: ignore
     db.commit()
     
     return BaseResponse(message="密码修改成功")

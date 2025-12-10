@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models import Tool, File, ChatSession, User
-from ...schemas import SearchRequest, SearchResult, BaseResponse
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models import Tool, File, ChatSession, User
+from ..schemas import SearchRequest, SearchResult, BaseResponse
 
 router = APIRouter(prefix="/search", tags=["搜索"])
 
@@ -34,15 +34,15 @@ async def search(
         for tool in tools:
             results.append(SearchResult(
                 type="tool",
-                id=str(tool.id),
-                title=tool.name,
-                description=tool.description,
-                content=tool.category,
-                score=calculate_relevance_score(q, tool.name, tool.description),
+                id=str(tool.id),  # type: ignore
+                title=tool.name,  # type: ignore
+                description=tool.description,  # type: ignore
+                content=tool.category,  # type: ignore
+                score=calculate_relevance_score(q, tool.name, tool.description),  # type: ignore
                 metadata={
-                    "category": tool.category,
-                    "usage_count": tool.usage_count,
-                    "created_at": tool.created_at.isoformat()
+                    "category": tool.category,  # type: ignore
+                    "usage_count": tool.usage_count,  # type: ignore
+                    "created_at": tool.created_at.isoformat()  # type: ignore
                 }
             ))
     
@@ -58,22 +58,22 @@ async def search(
         for file in files:
             results.append(SearchResult(
                 type="file",
-                id=str(file.id),
-                title=file.original_name,
-                description=f"文件类型: {file.file_type.upper()}, 大小: {format_file_size(file.file_size)}",
-                content=file.file_type,
-                score=calculate_relevance_score(q, file.original_name),
+                id=str(file.id),  # type: ignore
+                title=file.original_name,  # type: ignore
+                description=f"文件类型: {file.file_type.upper()}, 大小: {format_file_size(file.file_size)}",  # type: ignore
+                content=file.file_type,  # type: ignore
+                score=calculate_relevance_score(q, file.original_name),  # type: ignore
                 metadata={
-                    "file_type": file.file_type,
-                    "file_size": file.file_size,
-                    "download_count": file.download_count,
-                    "created_at": file.created_at.isoformat()
+                    "file_type": file.file_type,  # type: ignore
+                    "file_size": file.file_size,  # type: ignore
+                    "download_count": file.download_count,  # type: ignore
+                    "created_at": file.created_at.isoformat()  # type: ignore
                 }
             ))
     
     if search_type in ["all", "chats"]:
         # 搜索聊天记录
-        from ...models.chat import ChatSession, ChatMessage
+        from ..models.chat import ChatSession, ChatMessage
         
         # 搜索会话标题
         sessions = db.query(ChatSession).filter(
@@ -85,14 +85,14 @@ async def search(
         for session in sessions:
             results.append(SearchResult(
                 type="chat",
-                id=session.session_id,
-                title=session.title,
-                description=f"AI模型: {session.model_type}",
-                content=session.title,
-                score=calculate_relevance_score(q, session.title) * 0.9,  # 稍微降低聊天结果的权重
+                id=session.session_id,  # type: ignore
+                title=session.title,  # type: ignore
+                description=f"AI模型: {session.model_type}",  # type: ignore
+                content=session.title,  # type: ignore
+                score=calculate_relevance_score(q, session.title) * 0.9,  # type: ignore 稍微降低聊天结果的权重
                 metadata={
-                    "model_type": session.model_type,
-                    "updated_at": session.updated_at.isoformat() if session.updated_at else session.created_at.isoformat()
+                    "model_type": session.model_type,  # type: ignore
+                    "updated_at": session.updated_at.isoformat() if session.updated_at else session.created_at.isoformat()  # type: ignore
                 }
             ))
         
@@ -108,15 +108,15 @@ async def search(
         for message in messages:
             results.append(SearchResult(
                 type="chat",
-                id=message.session.session_id,
-                title=f"聊天记录: {message.session.title}",
-                description=truncate_text(message.content, 100),
-                content=message.content,
-                score=calculate_relevance_score(q, message.content) * 0.8,
+                id=message.session.session_id,  # type: ignore
+                title=f"聊天记录: {message.session.title}",  # type: ignore
+                description=truncate_text(message.content, 100),  # type: ignore
+                content=message.content,  # type: ignore
+                score=calculate_relevance_score(q, message.content) * 0.8,  # type: ignore
                 metadata={
-                    "role": message.role,
-                    "created_at": message.created_at.isoformat(),
-                    "session_title": message.session.title
+                    "role": message.role,  # type: ignore
+                    "created_at": message.created_at.isoformat(),  # type: ignore
+                    "session_title": message.session.title  # type: ignore
                 }
             ))
     
@@ -206,7 +206,7 @@ async def get_search_suggestions(
     for tool in tools:
         suggestions.append({
             "type": "tool",
-            "text": tool.name,
+            "text": tool.name,  # type: ignore
             "category": "工具"
         })
     
@@ -219,12 +219,12 @@ async def get_search_suggestions(
     for file in files:
         suggestions.append({
             "type": "file",
-            "text": file.original_name,
+            "text": file.original_name,  # type: ignore
             "category": "文件"
         })
     
     # 会话标题建议
-    from ...models.chat import ChatSession
+    from ..models.chat import ChatSession
     
     sessions = db.query(ChatSession.title).filter(
         ChatSession.user_id == current_user["id"],
@@ -235,7 +235,7 @@ async def get_search_suggestions(
     for session in sessions:
         suggestions.append({
             "type": "chat",
-            "text": session.title,
+            "text": session.title,  # type: ignore
             "category": "聊天记录"
         })
     

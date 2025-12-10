@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models.tool import Tool, ToolUsage
-from ...schemas import ToolResponse, ToolUsageResponse, BaseResponse
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models.tool import Tool, ToolUsage
+from ..schemas import ToolResponse, ToolUsageResponse, BaseResponse
 
 router = APIRouter(prefix="/ai-tools", tags=["AI工具管理"])
 
 @router.get("/", response_model=BaseResponse)
 async def get_tools(
-    category: str = None,
+    category: str | None = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db)
@@ -26,7 +26,7 @@ async def get_tools(
     
     return BaseResponse(
         message="获取工具列表成功",
-        data=[ToolResponse.from_orm(tool) for tool in tools]
+        data=[ToolResponse.model_validate(tool) for tool in tools]
     )
 
 @router.get("/{tool_id}", response_model=BaseResponse)
@@ -48,7 +48,7 @@ async def get_tool_detail(
     
     return BaseResponse(
         message="获取工具详情成功",
-        data=ToolResponse.from_orm(tool)
+        data=ToolResponse.model_validate(tool)
     )
 
 @router.post("/{tool_id}/use", response_model=BaseResponse)
@@ -88,7 +88,9 @@ async def use_tool(
     db.add(usage_record)
     
     # 更新工具使用次数
-    tool.usage_count += 1
+    from sqlalchemy import update
+    stmt = update(Tool).where(Tool.id == tool.id).values(usage_count=Tool.usage_count + 1)
+    db.execute(stmt)
     
     db.commit()
     
@@ -121,7 +123,7 @@ async def get_related_tools(
     
     return BaseResponse(
         message="获取相关工具成功",
-        data=[ToolResponse.from_orm(tool) for tool in related_tools]
+        data=[ToolResponse.model_validate(tool) for tool in related_tools]
     )
 
 @router.get("/user/usage", response_model=BaseResponse)
@@ -138,7 +140,7 @@ async def get_user_tool_usage(
     
     return BaseResponse(
         message="获取使用记录成功",
-        data=[ToolUsageResponse.from_orm(record) for record in usage_records]
+        data=[ToolUsageResponse.model_validate(record) for record in usage_records]
     )
 
 @router.get("/categories", response_model=BaseResponse)
@@ -170,5 +172,5 @@ async def get_hot_tools(
     
     return BaseResponse(
         message="获取热门工具成功",
-        data=[ToolResponse.from_orm(tool) for tool in hot_tools]
+        data=[ToolResponse.model_validate(tool) for tool in hot_tools]
     )

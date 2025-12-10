@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from datetime import datetime, timedelta
-from typing import Dict, Any
+from datetime import datetime, timedelta, timezone
+from typing import Dict, Any, Optional
 
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...models.dashboard import DashboardStats, UserActivity
-from ...models.user import User
-from ...models.tool import Tool, ToolUsage
-from ...schemas import DashboardStatsResponse, BaseResponse
+from ..db.database import get_db
+from ..core.security import get_current_user
+from ..models.dashboard import DashboardStats, UserActivity
+from ..models.user import User
+from ..models.tool import Tool, ToolUsage
+from ..schemas import DashboardStatsResponse, BaseResponse
 
 router = APIRouter(prefix="/dashboard", tags=["数据统计"])
 
@@ -21,7 +21,7 @@ async def get_dashboard_stats(
     """获取仪表板统计数据"""
     
     # 总访问量（最近30天）
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
     total_visits = db.query(UserActivity).filter(
         UserActivity.created_at >= thirty_days_ago,
         UserActivity.activity_type == "login"
@@ -31,7 +31,7 @@ async def get_dashboard_stats(
     total_users = db.query(User).filter(User.is_active == True).count()
     
     # 活跃用户（最近7天）
-    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
     active_users = db.query(UserActivity.user_id).filter(
         UserActivity.created_at >= seven_days_ago
     ).distinct().count()
@@ -88,7 +88,7 @@ async def get_user_stats(
     user_id = current_user["id"]
     
     # 用户活动统计（最近30天）
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
     user_activities = db.query(UserActivity).filter(
         UserActivity.user_id == user_id,
         UserActivity.created_at >= thirty_days_ago
@@ -117,7 +117,7 @@ async def get_user_stats(
         "activity_breakdown": activity_stats,
         "tool_usage": tool_stats,
         "most_active_day": get_most_active_day(user_activities),
-        "join_days": (datetime.utcnow() - current_user.get("created_at", datetime.utcnow())).days
+        "join_days": (datetime.now(timezone.utc) - current_user.get("created_at", datetime.now(timezone.utc))).days
     }
     
     return BaseResponse(
@@ -141,7 +141,7 @@ def get_most_active_day(activities):
 @router.post("/activity", response_model=BaseResponse)
 async def record_activity(
     activity_type: str,
-    activity_data: Dict[str, Any] = None,
+    activity_data: Optional[Dict[str, Any]] = None,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -170,7 +170,7 @@ async def get_trends(
             detail="天数必须在1-365之间"
         )
     
-    end_date = datetime.utcnow()
+    end_date = datetime.now(timezone.utc)
     start_date = end_date - timedelta(days=days)
     
     # 按天统计访问量

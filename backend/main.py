@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 import logging
 import os
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
 from app.core.config import settings
@@ -30,6 +31,32 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期管理 - 替代已弃用的on_event"""
+    # 启动事件
+    logger.info("正在启动AI门户后端服务...")
+    
+    try:
+        # 初始化数据库
+        init_db()
+        logger.info("数据库初始化完成")
+        
+        # 初始化默认数据
+        await init_default_data()
+        logger.info("默认数据初始化完成")
+        
+        logger.info(f"服务启动成功，运行在 http://{settings.HOST}:{settings.PORT}")
+        
+        yield  # 应用运行中...
+        
+    except Exception as e:
+        logger.error(f"服务启动失败: {str(e)}")
+        raise
+    
+    # 关闭事件
+    logger.info("正在关闭AI门户后端服务...")
+
 # 创建FastAPI应用
 app = FastAPI(
     title=settings.APP_NAME,
@@ -37,7 +64,8 @@ app = FastAPI(
     description="AI门户系统后端API",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    lifespan=lifespan  # 使用新的生命周期管理
 )
 
 # 配置CORS
@@ -86,36 +114,11 @@ app.include_router(dashboard_router, prefix="/api/v1")
 app.include_router(settings_router, prefix="/api/v1")
 app.include_router(search_router, prefix="/api/v1")
 
-@app.on_event("startup")
-async def startup_event():
-    """应用启动事件"""
-    logger.info("正在启动AI门户后端服务...")
-    
-    try:
-        # 初始化数据库
-        init_db()
-        logger.info("数据库初始化完成")
-        
-        # 初始化默认数据
-        await init_default_data()
-        logger.info("默认数据初始化完成")
-        
-        logger.info(f"服务启动成功，运行在 http://{settings.HOST}:{settings.PORT}")
-        
-    except Exception as e:
-        logger.error(f"服务启动失败: {str(e)}")
-        raise
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """应用关闭事件"""
-    logger.info("正在关闭AI门户后端服务...")
-
 async def init_default_data():
     """初始化默认数据"""
     from sqlalchemy.orm import Session
-    from .app.db.database import SessionLocal
-    from .app.models import Tool
+    from app.db.database import SessionLocal
+    from app.models import Tool
     
     db: Session = SessionLocal()
     
